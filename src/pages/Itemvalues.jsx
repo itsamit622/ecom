@@ -1,14 +1,15 @@
 import React from 'react';
 import { Button, Col, Collapse, Container, Form, Image, Modal, Row } from 'react-bootstrap'
 import productsData  from '../data/products.json'
-
+import {ecomContext} from './Context'
 
 export default class Itemvalues extends React.Component {
+  static contextType = ecomContext;
   state = {
     isValue: false,
     show: false,
     count: 1,
-    shopdata: productsData
+    shopdata: this.context.products
 
   };
 

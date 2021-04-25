@@ -2,16 +2,22 @@ import React from 'react';
 import { Container,Row,Col } from 'react-bootstrap';
 import {Link} from "react-router-dom"
 import productData from '../data/products.json';
-
+import {ecomContext} from './Context'
+import MyCart from './MyCart'
 
 
 
 export default class Itemcollection extends React.Component{
+  static contextType = ecomContext;
     state={
-        shopdata :productData
+        shopdata :this.context.products
  
      };
+     ClickMe(value ,second) {
+      
+     value.handler("hello" ,second)
      
+  }
     render(){
       
         console.log("id" , this.props.match)
@@ -46,16 +52,23 @@ let filerted = this.state.shopdata.find(function(usersvalues) {
           <img src={values.imageUrl} alt="sf" width="250" height="300"/>
           <div className="ml-5">{values.name} {values.price}</div>
           </Link>
+          <button onClick={this.ClickMe.bind(this, this.context ,values.id)}>ADD to cart</button>
       </Col>
           })
-  
+          // let inCart = null;
+          // if (this.context.carts.id == undefined) {
+          //     inCart = <h1>hello</h1>
+          // }
+          // else  { 
+          //   inCart = <h1>{this.context.carts.id}</h1>
+          // }
  
 
         return <>
         <div>
        
           <h2 className="p-3 mb-2 bg-primary text-white text-center"><div>{filerted.title}</div></h2>
-       
+         
         
         <div >
             

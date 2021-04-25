@@ -2,11 +2,13 @@ import React from 'react'
 import {Link} from "react-router-dom"
 import { Container , Row } from 'react-bootstrap';
 import productsData from '../data/products.json';
+import {ecomContext} from './Context'
 
 export default class Itemlist extends React.Component{
-
+   static contextType = ecomContext;
+  
     state={
-       shopdata : productsData
+       shopdata : this.context.products
 
     };
  
@@ -32,7 +34,7 @@ export default class Itemlist extends React.Component{
  }
 
     render(){
-
+      console.log("context data " ,this.context)
         console.log("path",this.props.match.path)
         return <>
         <div className="p-3 mb-2 bg-primary text-white text-center">
