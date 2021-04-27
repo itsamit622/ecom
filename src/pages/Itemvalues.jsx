@@ -67,7 +67,7 @@ export default class Itemvalues extends React.Component {
 <div className="col-4 text-center">
         <div> <h3>{values.name}</h3>
           Price: {values.price}</div>
-        <button className="btn btn-primary " onClick={this.addCart.bind(this)}>Add to cart</button>
+        <button className="btn btn-primary " onClick={this.addCart.bind(this)} >Add to cart</button>
        
       </div>
       </div>

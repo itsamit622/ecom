@@ -36,14 +36,14 @@ export default class App extends React.Component {
           return false;
         }
       });
-      if (targetItem !== undefined) {
+      if (targetItem !== undefined  ) {
         return false;
       }
       return true;
     });
     
-targetItem.count=1
-    this.state.carts.push(targetItem);
+    targetItem.count=1
+    this.state.carts.push({...targetItem});
     this.setState(this.state);
     console.log("target item" ,targetItem)
 
@@ -56,7 +56,7 @@ targetItem.count=1
     let index=tempCart.indexOf(selectedProducts);
     let product=tempCart[index];
      product.count =product.count + 1
-     product.total =parseInt(product.price) * product.count
+    // product.total =parseInt(product.price) * product.count
    
    this.setState({
      carts :[...tempCart]
