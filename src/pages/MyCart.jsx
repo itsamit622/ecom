@@ -9,7 +9,7 @@ export default class MyCart extends React.Component{
     state ={
          carts:this.context.carts,
         count:1,
-        cartTotal:0
+        subtotal:0
     }
    
     // countDec() {
@@ -20,10 +20,10 @@ export default class MyCart extends React.Component{
     //   }
       
   allCart(){
-      let itemsV =this.state.carts.map((values)=>{
+      let itemsV =this.state.carts.map((values,index)=>{
         let price = null;
         
-        console.log("values " ,values)
+        console.log("values " ,index)
          if (values.count === 1) {
            price = values.price
          }
@@ -41,7 +41,9 @@ export default class MyCart extends React.Component{
 
                           </div>
                           <div className="col-2">
-            <span> <span onClick={()=>this.context.handler3(values.id)}>❮ </span><span>    {values.count} </span><span onClick={()=>this.context.handler2(values.id)}>   ❯</span></span>
+            <span> <span onClick={()=>this.context.handler3(index)}>❮ </span><span>    {values.count} </span>
+            
+           <span onClick={()=>this.context.handler2(index)}>   ❯</span></span>
 
                           </div>
                           <div className="col-2">
@@ -94,6 +96,9 @@ export default class MyCart extends React.Component{
                   </div>
             {this.allCart()}
       
+            </div>
+            <div>
+               <h5>Total</h5> {this.context.subtotal}$
             </div>
         </div>
     }

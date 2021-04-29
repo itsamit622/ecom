@@ -26,9 +26,9 @@ export default class App extends React.Component {
   };
   cart = (e, oldId) => {
     console.log("hellocall", e, oldId);
-    
+    let tempCart=[...this.state.products]
     let targetItem ;
-    this.state.products.every(function (single) {
+    tempCart.every(function (single) {
       targetItem = single.items.find((singleItem) => {
         if (singleItem.id === oldId) {
           return true;
@@ -43,46 +43,70 @@ export default class App extends React.Component {
     });
     
     targetItem.count=1
-    this.state.carts.push({...targetItem});
-    this.setState(this.state);
-    console.log("target item" ,targetItem)
+    let price = targetItem.price
+    targetItem.total = parseInt(price) * targetItem.count 
+    // this.state.carts.push({...targetItem});
+    this.setState(()=>{
+      return {
+        products:tempCart, carts:[...this.state.carts ,{...targetItem}]
+      }
+    },()=>{this.makeTotal()})
+    console.log("target item" ,targetItem.total)
 
     console.log("carts", this.state.carts);
   };
-  inc=(id)=>{
-    console.log("id" ,id)
+  inc=(index)=>{
+    console.log("id" ,index)
     let tempCart=[...this.state.carts];
-    let selectedProducts=tempCart.find(item=>item.id===id);
-    let index=tempCart.indexOf(selectedProducts);
-    let product=tempCart[index];
-     product.count =product.count + 1
+    tempCart[index].count++
+    tempCart[index].total = parseInt(tempCart[index].price)*tempCart[index].count 
+
+    // let selectedProducts=tempCart.find(item=>item.id===id);
+    //  let index=tempCart.indexOf(selectedProducts);
+    // tempCart[index].count++;
+    //selectedProducts.count =selectedProducts.count + 1
     // product.total =parseInt(product.price) * product.count
    
-   this.setState({
-     carts :[...tempCart]
+   this.setState(()=>{
+     return {cart :[...tempCart]}
+   },()=>{
+     this.makeTotal();
    })
-   console.log("pro" , product)
 
-
+console.log("totalmake" , tempCart[index])
   }
-  dec=(id)=>{
-    console.log("id" ,id)
+  dec=(index)=>{
+    console.log("id" ,index)
     let tempCart=[...this.state.carts];
-    let selectedProducts=tempCart.find(item=>item.id===id);
-    let index=tempCart.indexOf(selectedProducts);
-    let product=tempCart[index];
-     product.count =product.count - 1
-   product.total=parseInt(product.price) * product.count
-   this.setState({
-     carts :[...tempCart],
-   })
+    tempCart[index].count--
+    tempCart[index].total = parseInt(tempCart[index].price)*tempCart[index].count 
+  //   let selectedProducts=tempCart.find(item=>item.id===id);
+  //   let index=tempCart.indexOf(selectedProducts);
+  //   let product=tempCart[index];
+  //    product.count =product.count - 1
+  //  product.total=parseInt(product.price) * product.count
+  this.setState(()=>{
+    return {cart :[...tempCart]}
+  },()=>{
+    this.makeTotal();
+  })
    
-   console.log("pro" , product)
+   console.log("pro" , tempCart)
 
 
   }
-
+makeTotal=()=>{
+  let subtotal1=0;
+  this.state.carts.map(item=>(subtotal1 += item.total));
+  let total =subtotal1;
+  this.setState(()=>{
+    return {
+      subtotal :subtotal1 
+    }
+  })
+}
   render() {
+    console.log("this is subtotal ", this.state.subtotal)
     return (
       <div>
         <div className="header">

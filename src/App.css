@@ -71,3 +71,22 @@ justify-content: center;
 .marginC {
     margin-top: 40px;
 }
+.cartProductBorder  {
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,.2)
+}
+.cartProductInner  {
+    padding: 20px 5px;
+    
+    display: flex;
+    
+    justify-content: space-between;
+}
+.display {
+    display: flex;
+}
+.images{
+    left: 100px;
+    position: relative;
+}
