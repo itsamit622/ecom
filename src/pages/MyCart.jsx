@@ -1,16 +1,21 @@
 import React from 'react';
 import {ecomContext} from './Context'
 import { Button, Col, Collapse, Container, Form, Image, Modal, Row } from 'react-bootstrap'
+import Sign from '../Sign'
 
 
 
 export default class MyCart extends React.Component{
     static contextType = ecomContext;
-    state ={
-         carts:this.context.carts,
-        count:1,
-        subtotal:0
-    }
+    submitHandler=()=>{
+        this.context.handler8()
+        console.log("" )
+      }
+    // state ={
+    //      carts:this.context.carts,
+    //     // count:1,
+    //     // subtotal:0
+    // }
    
     // countDec() {
     //     if (this.state.count > 0) {
@@ -20,7 +25,7 @@ export default class MyCart extends React.Component{
     //   }
       
   allCart(){
-      let itemsV =this.state.carts.map((values,index)=>{
+      let itemsV =this.context.carts.map((values,index)=>{
         let price = null;
         
         console.log("values " ,index)
@@ -50,8 +55,9 @@ export default class MyCart extends React.Component{
                           <span>{price}</span>
                          
                           </div>
-
+<div><button onClick={()=>this.context.removebtn(index)}>Remove</button></div>
                       </div>
+                      
                   </div>
               
             
@@ -62,8 +68,21 @@ export default class MyCart extends React.Component{
   }
   
     render(){
+        let Data="";
+      if(this.context.modal ===true)
+      Data =<Sign />
+      else{
+          Data=""
+      }
         
-        
+      let button;
+      if(this.context.user === this.context.userName && this.context.pass === this.context.password && this.context.modal===false){
+ 
+        button =<button className="btn btn-success">Proceed</button>
+      }
+      else{
+        button =<button className="btn btn-primary" onClick={this.submitHandler}>Place Order</button>
+      }
        console.log("mycart", this.context.carts)
         return  <div className="header-1">
             <div>
@@ -100,6 +119,9 @@ export default class MyCart extends React.Component{
             <div>
                <h5>Total</h5> {this.context.subtotal}$
             </div>
+           { button }
+           {this.Data}
         </div>
+
     }
 }

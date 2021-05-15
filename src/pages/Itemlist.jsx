@@ -8,16 +8,12 @@ export default class Itemlist extends React.Component{
    static contextType = ecomContext;
   
     state={
-       shopdata : this.context.products
-
+       shopdata : this.context.products,
+       
     };
- 
+    
      Getlinks(){
        let LinkTags = this.state.shopdata.map((values,i)=>{
-
-      //  let UserTag=   <Link key={i} to={this.props.match.path+"/"+ values.routeName}><div className="main">
-      //    <img className="image" src={values.imageUrl } width="300" height="400" />
-      //      <h3 className="text-center menu-item">{values.title}</h3></div></Link>
       let UserTag=   
            <div className="col-md-3 mt-4">
            <Link key={i} to={this.props.match.path+"/"+ values.routeName}>
@@ -34,16 +30,18 @@ export default class Itemlist extends React.Component{
  }
 
     render(){
-      console.log("context data " ,this.context)
-        console.log("path",this.props.match.path)
-        return <>
+
+       console.log("filterv", this.filtered )
+     
+       
+       return <>
         <div className="p-3 mb-2 bg-primary text-white text-center">
          <h5> COLLECTIONS</h5>
       </div>
         <Container>
         <Row>
          {/* <ul style={{display:"inline-flex" ,listStyle:"none"}} >{this.Getlinks()}</ul> */}
-        {this.Getlinks()}
+         {this.Getlinks()}
          </Row>
         </Container>
 

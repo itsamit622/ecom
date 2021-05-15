@@ -7,6 +7,7 @@ import Shop from "./pages/Shop";
 import Item from "./pages/Item";
 import productsData from "./data/products.json";
 import { ecomContext } from "./pages/Context";
+import Sign from "./Sign"
 import {
   Button,
   Form,
@@ -21,13 +22,24 @@ export default class App extends React.Component {
   state = {
     products: productsData,
     carts: [],
-    subtotal:0
-    
+    subtotal:0,
+    filter:"",   
+    userName:"",
+    password:"",
+    isLogin:false,
+    modal:false,
+    user:"admin",
+    pass:"adminhello",
   };
+  
+
+
   cart = (e, oldId) => {
     console.log("hellocall", e, oldId);
+    let tempCart2=[...this.state.carts]
     let tempCart=[...this.state.products]
     let targetItem ;
+    
     tempCart.every(function (single) {
       targetItem = single.items.find((singleItem) => {
         if (singleItem.id === oldId) {
@@ -41,19 +53,19 @@ export default class App extends React.Component {
       }
       return true;
     });
-    
+  
     targetItem.count=1
     let price = targetItem.price
     targetItem.total = parseInt(price) * targetItem.count 
     // this.state.carts.push({...targetItem});
+    let temp=tempCart2.find(item =>item.id==oldId)
+   
     this.setState(()=>{
       return {
         products:tempCart, carts:[...this.state.carts ,{...targetItem}]
       }
     },()=>{this.makeTotal()})
-    console.log("target item" ,targetItem.total)
-
-    console.log("carts", this.state.carts);
+    console.log("sdsdsdscarts", tempCart2);
   };
   inc=(index)=>{
     console.log("id" ,index)
@@ -78,41 +90,142 @@ console.log("totalmake" , tempCart[index])
   dec=(index)=>{
     console.log("id" ,index)
     let tempCart=[...this.state.carts];
-    tempCart[index].count--
-    tempCart[index].total = parseInt(tempCart[index].price)*tempCart[index].count 
+    // tempCart[index].count--
+   // tempCart[index].total = parseInt(tempCart[index].price)*tempCart[index].count 
   //   let selectedProducts=tempCart.find(item=>item.id===id);
   //   let index=tempCart.indexOf(selectedProducts);
   //   let product=tempCart[index];
   //    product.count =product.count - 1
   //  product.total=parseInt(product.price) * product.count
-  this.setState(()=>{
-    return {cart :[...tempCart]}
-  },()=>{
-    this.makeTotal();
-  })
+  if(tempCart[index].count>1){
+     tempCart[index].count--
+    tempCart[index].total = parseInt(tempCart[index].price)*tempCart[index].count 
+    this.setState(()=>{
+      return {cart :[...tempCart]}
+    },()=>{
+      this.makeTotal(); 
+    })
+  }
+ 
    
    console.log("pro" , tempCart)
 
 
   }
+  remove=(index)=>{
+    console.log("id" ,index)
+    this.state.carts[index].total =0;
+    this.state.carts.splice(index,1)
+   this.setState({
+     carts:[...this.state.carts]
+   },()=>{
+     this.makeTotal()
+   })
+
+
+  }
 makeTotal=()=>{
   let subtotal1=0;
-  this.state.carts.map(item=>(subtotal1 += item.total));
+  this.state.carts.forEach(item=>(subtotal1 += item.total));
   let total =subtotal1;
-  this.setState(()=>{
-    return {
-      subtotal :subtotal1 
-    }
+  this.setState({
+    subtotal:subtotal1
   })
 }
+
+
+search(event){
+  console.log("i am e",event.target.value);
+  this.setState({
+    filter:event.target.value
+  })
+  console.log("i am e",event);
+
+}
+// submit=(event)=>{
+//   console.log("i am e");
+ 
+
+// }
+updateUser=(value)=>{
+  console.log("myval", value)
+ this.setState({
+   userName:value
+ })
+}
+updatePass=(value)=>{
+  this.setState({
+    password:value
+  })
+ }
+ submit=()=>{
+if(this.state.user === this.state.userName && this.state.pass === this.state.password){
+ 
+  this.setState({
+    // userName:"",
+    // password:"",
+    isLogin:true
+  })
+  console.log("this" ,this.state.userName) 
+}
+  else {
+    alert("The user ID/password you have entered is invalid, please try again.")
+    this.setState({
+      userName:"",
+     password:"",
+      isLogin:false
+    })
+  }
+
+
+ }
+ logOut=()=>{
+  this.setState({
+    isLogin:!this.state.isLogin,
+    userName:"",
+    password:"",
+  })
+
+ }
+hide=(e)=>{
+  this.setState({
+    modal: !e,
+    // userName:"",
+    // password:"",
+  })
+}
+payment=()=>{
+  this.setState({
+    modal:!this.state.modal
+
+  })
+
+}
   render() {
+    let select;
+      if(this.state.isLogin === false ){
+        select = <button className="btn btn-primary" onClick={() => { this.hide() }} >Sign in</button>
+      }else {
+        select = <button className="btn btn-danger" onClick={this.logOut} >Sign Out </button>
+  
+      }
     console.log("this is subtotal ", this.state.subtotal)
     return (
       <div>
         <div className="header">
           <span className="logo">SCRED.</span>
         </div>
-        <ecomContext.Provider value={{ ...this.state, handler: this.cart ,handler2:this.inc , handler3:this.dec }}>
+        <ecomContext.Provider value={{ ...this.state, 
+          handler: this.cart ,
+          handler2:this.inc , 
+          handler3:this.dec ,
+          removebtn:this.remove , 
+          handler4:this.submit ,
+          handler5:this.updateUser,
+          handler6:this.updatePass ,
+          handler7:this.hide
+          ,
+          handler8:this.payment} }>
           <BrowserRouter>
             <Navbar bg="dark" variant="dark" expand="lg">
               <Navbar.Brand href="/">SCRED.</Navbar.Brand>
@@ -137,6 +250,7 @@ makeTotal=()=>{
                   <Link to="/cart" className="nav-link">
                     Cart ({this.state.carts.length})
                   </Link>
+                  
                   <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                     <Link to="/Shop" className="dropdown-item">
                       Shop
@@ -158,9 +272,13 @@ makeTotal=()=>{
                     type="text"
                     placeholder="Search"
                     className="mr-sm-2"
+                    onChange ={this.search.bind(this)}
                   />
                   <Button variant="outline-success">Search</Button>
                 </Form>
+                <Link  to={"/" | "/Shop" | "/Contact"} className="nav-link">
+                    {select}
+                  </Link>
               </Navbar.Collapse>
             </Navbar>
 
@@ -210,8 +328,11 @@ makeTotal=()=>{
             <Route path="/Contact" component={Contact} />
             <Route path="/shopdata" component={Item} />
             <Route path="/cart" component={MyCart} />
+            {/* <Route path="/" component={Sign} /> */}
+            <Route path={"/" | "/Shop" | "/Contact"} component={Sign} />
           </BrowserRouter>
         </ecomContext.Provider>
+        
       </div>
     );
   }
