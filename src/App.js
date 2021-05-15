@@ -23,7 +23,7 @@ export default class App extends React.Component {
     products: productsData,
     carts: [],
     subtotal:0,
-    filter:"",   
+    filter:null,   
     userName:"",
     password:"",
     isLogin:false,
@@ -139,6 +139,7 @@ search(event){
   this.setState({
     filter:event.target.value
   })
+  
   console.log("i am e",event);
 
 }
@@ -272,6 +273,7 @@ payment=()=>{
                     type="text"
                     placeholder="Search"
                     className="mr-sm-2"
+                   
                     onChange ={this.search.bind(this)}
                   />
                   <Button variant="outline-success">Search</Button>
