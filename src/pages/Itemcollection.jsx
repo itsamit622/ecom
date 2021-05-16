@@ -30,7 +30,7 @@ export default class Itemcollection extends React.Component {
     const regex = new RegExp(filtervalue, "gi");
 
     const result = filerted.items.filter((item) => item.name.match(regex));
-    console.table("regex", result);
+    console.log("regex", result);
     //why not find???????????
 
     let collections2 = result.map((values) => {

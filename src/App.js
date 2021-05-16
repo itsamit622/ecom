@@ -23,6 +23,7 @@ export default class App extends React.Component {
     products: productsData,
     carts: [],
     subtotal: 0,
+    subCount: 0,
     filter: null,
     userName: "",
     password: "",
@@ -55,34 +56,48 @@ export default class App extends React.Component {
     targetItem.count = 1;
     let price = targetItem.price;
     targetItem.total = parseInt(price) * targetItem.count;
-    // this.state.carts.push({...targetItem});
-    let temp = tempCart2.find((item) => item.id == oldId);
 
-    this.setState(
-      () => {
-        return {
+    let check = tempCart2.every((item) => {
+      return item.id !== oldId;
+    });
+
+    if (check) {
+      this.setState(
+        {
           products: tempCart,
           carts: [...this.state.carts, { ...targetItem }],
-        };
-      },
-      () => {
-        this.makeTotal();
-      }
-    );
-    console.log("sdsdsdscarts", tempCart2);
+        },
+        () => {
+          this.makeTotal();
+        }
+      );
+    } else {
+      let itemForCountIncrease = tempCart2.find((item) => item.id == oldId);
+      itemForCountIncrease.count += 1;
+      itemForCountIncrease.total = parseInt(price) * itemForCountIncrease.count;
+      let oldItems = this.state.carts.filter((item) => item.id != oldId);
+      this.setState(
+        {
+          carts: [...oldItems, { ...itemForCountIncrease }],
+        },
+        () => {
+          this.makeTotal();
+        }
+      );
+    }
   };
   inc = (index) => {
-    console.log("id", index);
+  
     let tempCart = [...this.state.carts];
     tempCart[index].count++;
     tempCart[index].total =
       parseInt(tempCart[index].price) * tempCart[index].count;
-
-    // let selectedProducts=tempCart.find(item=>item.id===id);
-    //  let index=tempCart.indexOf(selectedProducts);
-    // tempCart[index].count++;
-    //selectedProducts.count =selectedProducts.count + 1
-    // product.total =parseInt(product.price) * product.count
+//confusion in index????
+    // let selectedProducts=tempCart.find(item=>item.id===value);
+    // // let index=tempCart.indexOf(selectedProducts);
+    // // tempCart[index].count++;
+    // selectedProducts.count++
+    // selectedProducts.total =parseInt(selectedProducts.price) * selectedProducts.count
 
     this.setState(
       () => {
@@ -93,7 +108,7 @@ export default class App extends React.Component {
       }
     );
 
-    console.log("totalmake", tempCart[index]);
+    console.log("totalmake",tempCart[index] );
   };
   dec = (index) => {
     console.log("id", index);
@@ -136,10 +151,12 @@ export default class App extends React.Component {
   };
   makeTotal = () => {
     let subtotal1 = 0;
+    let subCount1 = 0;
     this.state.carts.forEach((item) => (subtotal1 += item.total));
-    let total = subtotal1;
+    this.state.carts.forEach((item) => (subCount1 += item.count));
     this.setState({
       subtotal: subtotal1,
+      subCount: subCount1,
     });
   };
 
@@ -151,10 +168,7 @@ export default class App extends React.Component {
 
     console.log("i am e", event);
   }
-  // submit=(event)=>{
-  //   console.log("i am e");
 
-  // }
   updateUser = (value) => {
     console.log("myval", value);
     this.setState({
@@ -269,7 +283,7 @@ export default class App extends React.Component {
                     items
                   </Link>
                   <Link to="/cart" className="nav-link">
-                    Cart ({this.state.carts.length})
+                    Cart ({this.state.subCount})
                   </Link>
 
                   <NavDropdown title="Dropdown" id="basic-nav-dropdown">
