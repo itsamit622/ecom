@@ -25,24 +25,29 @@ export default class Itemcollection extends React.Component {
         return false;
       }
     });
-   
 
     let filtervalue = this.context.filter;
-    const regex = new RegExp(filtervalue, "gi",(3));
-  
+    const regex = new RegExp(filtervalue, "gi");
+
     const result = filerted.items.filter((item) => item.name.match(regex));
-  console.table("regex",result);
- //why not find???????????
-  
-    let collections2=result.map((values)=>{
-       return <div className="col-md-3 mt-4">
-        <Link  to={ this.props.match.url +"/"+values.id }>
-               <img src={values.imageUrl} alt="sf" width="250" height="300"/>
-               <div className="ml-5">{values.name} {values.price}</div>
-               </Link>
-            <button onClick={this.ClickMe.bind(this, this.context ,values.id)}>ADD to cart</button>
-       </div>
-     })
+    console.table("regex", result);
+    //why not find???????????
+
+    let collections2 = result.map((values) => {
+      return (
+        <div className="col-md-3 mt-4">
+          <Link to={this.props.match.url + "/" + values.id}>
+            <img src={values.imageUrl} alt="sf" width="250" height="300" />
+            <div className="ml-5">
+              {values.name} {values.price}
+            </div>
+          </Link>
+          <button onClick={this.ClickMe.bind(this, this.context, values.id)}>
+            ADD to cart
+          </button>
+        </div>
+      );
+    });
 
     let collections = filerted.items.map((values) => {
       return (
@@ -59,6 +64,7 @@ export default class Itemcollection extends React.Component {
         </Col>
       );
     });
+
     // let inCart = null;
     // if (this.context.carts.id == undefined) {
     //     inCart = <h1>hello</h1>
@@ -66,7 +72,12 @@ export default class Itemcollection extends React.Component {
     // else  {
     //   inCart = <h1>{this.context.carts.id}</h1>
     // }
-
+    let Mycollections = "";
+    if (collections2.length > 0 && filtervalue.length > 1) {
+      Mycollections = collections2;
+    } else {
+      Mycollections = collections;
+    }
     return (
       <>
         <div>
@@ -74,14 +85,11 @@ export default class Itemcollection extends React.Component {
             <div>{filerted.title}</div>
           </h2>
 
-          <div>
-            {/* <ul style={{display:"inline-flex" ,listStyle:"none"}}> */}
-            <Container>
-              <Row>{collections}</Row>
-            </Container>
-            {/* </ul> */}
-          </div>
-          {collections2} 
+          {/* <ul style={{display:"inline-flex" ,listStyle:"none"}}> */}
+          <Container>
+            <Row>{Mycollections}</Row>
+          </Container>
+          {/* </ul> */}
         </div>
       </>
     );
